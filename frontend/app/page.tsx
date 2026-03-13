@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Flame, MapPin, ShieldCheck, Cpu } from 'lucide-react'
+import { MapPin, Info, Flame } from 'lucide-react'
 import HouseholdMode from '@/components/HouseholdMode'
 import HotelMode from '@/components/HotelMode'
 
@@ -28,109 +28,90 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="min-h-screen relative overflow-hidden bg-slate-950 text-slate-50">
-      
-      {/* Premium Background Orbs */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-10%] left-1/4 w-[500px] h-[500px] rounded-full opacity-[0.03] blur-[100px] bg-indigo-500" />
-        <div className="absolute bottom-1/4 right-0 w-[600px] h-[600px] rounded-full opacity-[0.02] blur-[120px] bg-emerald-500" />
-      </div>
-
-      <div className="relative max-w-5xl mx-auto px-6 pt-16 pb-20">
-        
-        {/* Header / Hero Section */}
-        <div className="text-center mb-16 animate-slide-up">
-          {/* Logo */}
-          <div className="flex justify-center mb-6">
-            <div className="relative group">
-              <div className="absolute inset-0 bg-indigo-500 rounded-2xl blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
-              <div className="relative w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-xl">
-                <Flame size={32} className="text-indigo-400" />
-              </div>
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+      {/* Top Navigation Bar */}
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-md bg-sky-600 flex items-center justify-center text-white">
+              <Flame size={18} />
             </div>
+            <span className="font-bold text-lg text-slate-900 tracking-tight">
+              Aduppu <span className="font-normal text-slate-500 ml-1">അടുപ്പ്</span>
+            </span>
           </div>
-
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-4">
-            Aduppu <span className="font-medium text-slate-400 tracking-normal ml-2 text-3xl sm:text-4xl md:text-5xl">അടുപ്പ്</span>
-          </h1>
           
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto mb-8 font-medium">
-            Intelligent LPG Management Protocol. Maximize efficiency, minimize waste, and secure your energy reserves with AI-driven precision.
-          </p>
-
-          <div className="flex items-center justify-center gap-6 text-sm font-medium text-slate-500 flex-wrap">
-            <div className="flex items-center gap-2">
-              <MapPin size={16} className="text-indigo-400" />
-              <span>Coimbatore Base</span>
-            </div>
-            <div className="w-1 h-1 rounded-full bg-slate-700 hidden sm:block" />
-            <div className="flex items-center gap-2">
-              <ShieldCheck size={16} className="text-emerald-400" />
-              <span>Conservation Active</span>
+          <div className="hidden sm:flex items-center gap-4 text-sm text-slate-500 font-medium">
+            <div className="flex items-center gap-1">
+              <MapPin size={14} className="text-slate-400" />
+              Coimbatore
             </div>
             {currentTime && (
               <>
-                <div className="w-1 h-1 rounded-full bg-slate-700 hidden sm:block" />
+                <div className="w-px h-4 bg-slate-200" />
                 <span>{currentTime}</span>
               </>
             )}
           </div>
         </div>
+      </nav>
 
-        {/* Segmented Control Tabs */}
-        <div className="flex justify-center mb-10 animate-fade-in" style={{ animationDelay: '150ms' }}>
-          <div className="segmented-control glass-card p-1">
-            <button
-              className={`segment-btn ${activeTab === 'household' ? 'active' : ''}`}
-              onClick={() => setActiveTab('household')}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-              Domestic Core
-            </button>
-            <button
-              className={`segment-btn ${activeTab === 'hotel' ? 'active' : ''}`}
-              onClick={() => setActiveTab('hotel')}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
-              Commercial Hub
-            </button>
+      {/* Main Content Area */}
+      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        {/* Simple Page Header */}
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-slate-900 mb-2">LPG Management Dashboard</h1>
+          <p className="text-slate-500 text-sm max-w-3xl">
+            Calculate your gas requirements and get step-by-step cooking plans to ensure your supply lasts through the current shortage period.
+          </p>
+        </div>
+
+        <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          {/* Tabs */}
+          <div className="px-6 border-b border-gray-200">
+            <nav className="flex space-x-8" aria-label="Tabs">
+              <button
+                onClick={() => setActiveTab('household')}
+                className={`flex whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'household'
+                    ? 'border-sky-600 text-sky-700'
+                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+                }`}
+              >
+                Household Dashboard
+              </button>
+              <button
+                onClick={() => setActiveTab('hotel')}
+                className={`flex whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'hotel'
+                    ? 'border-sky-600 text-sky-700'
+                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+                }`}
+              >
+                Restaurant Manager
+              </button>
+            </nav>
+          </div>
+
+          {/* Active Tab Content */}
+          <div className="p-6">
+            {activeTab === 'household' ? <HouseholdMode /> : <HotelMode />}
           </div>
         </div>
 
-        {/* Content Area */}
-        <div className="glass-card p-6 md:p-8 animate-slide-up" style={{ animationDelay: '300ms', borderColor: 'rgba(99, 102, 241, 0.15)' }}>
-          {/* Header context for the specific mode */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-8 border-b border-slate-800/60">
-            <div>
-              <h2 className="text-xl font-bold text-slate-100 flex items-center gap-2 mb-2">
-                {activeTab === 'household' ? 'Domestic Optimization Engine' : 'Commercial Quota Manager'}
-              </h2>
-              <p className="text-sm text-slate-400 max-w-xl leading-relaxed">
-                {activeTab === 'household' 
-                  ? 'Calculate reserve longevity and offload thermal load to electric appliances to stretch your cylinder limits during supply shortages.'
-                  : 'Operate cleanly within the 20% institutional allocation. Aduppu AI instantly trims your menu matrix to ensure continuous service.'}
-              </p>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold whitespace-nowrap self-start md:self-center">
-              <Cpu size={14} />
-              Gemini 2.0 AI Core
-            </div>
-          </div>
-
-          {/* Render Mode Component */}
-          {activeTab === 'household' ? <HouseholdMode /> : <HotelMode />}
-        </div>
-
-        {/* Footer */}
-        <div className="mt-16 pt-8 border-t border-slate-800/50 flex flex-col items-center">
-          <p className="text-sm text-slate-500 font-medium tracking-wide">
-            Aduppu <span className="font-normal mx-1">അടുപ്പ്</span> © 2026
-          </p>
-          <p className="text-xs text-slate-600 mt-2">
-            Intelligent Energy Systems · Powered by Google Gemini
+        {/* Footer info */}
+        <div className="mt-8 flex items-start gap-3 p-4 rounded-lg bg-blue-50 border border-blue-100 text-blue-800">
+          <Info size={18} className="text-blue-500 shrink-0 mt-0.5" />
+          <p className="text-sm">
+            <strong>March 2026 Advisory:</strong> Domestic households face a 25-45 day booking wait time. Commercial establishments are restricted to 20% of their normal allocation.
           </p>
         </div>
-      </div>
-    </main>
+      </main>
+      
+      <footer className="bg-white border-t border-gray-200 py-6 text-center">
+        <p className="text-sm text-slate-500">Aduppu അടുപ്പ് © 2026. Powered by Google Gemini AI.</p>
+      </footer>
+    </div>
   )
 }

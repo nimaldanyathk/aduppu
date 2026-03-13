@@ -2,17 +2,17 @@
 
 import { useState } from 'react'
 import {
-  AlertCircle, Flame, Users, Zap, BookOpen, ChefHat, CheckCircle2, XCircle
+  AlertCircle, Flame, Users, Zap, BookOpen, ChefHat, CheckCircle2, XCircle, Info
 } from 'lucide-react'
 import { optimizeHotel, HotelOptimizeResponse, HotelOptimizeRequest } from '@/lib/api'
 
 const HOTEL_EQUIPMENT = [
   'Induction Hob', 'Electric Oven', 'Combi Steamer',
-  'Electric Griller', 'Hot Case', 'Microwave', 'Electric Kettle'
+  'Electric Griller', 'Hot Food Cabinet', 'Microwave', 'Electric Kettle'
 ]
 
 const DEFAULT_MENU =
-  'Veg Biryani, Chicken Curry, Dal Makhani, Tandoori Roti, Paneer Butter Masala, Curd Rice, Sambar, Rasam, Papad, Lassi, Filter Coffee'
+  'Vegetable Biryani, Chicken Curry, Dal Makhani, Tandoori Roti, Paneer Butter Masala, Curd Rice, Sambar, Rasam, Papad, Lassi, Filter Coffee'
 
 export default function HotelMode() {
   const [form, setForm] = useState<HotelOptimizeRequest>({
@@ -36,7 +36,7 @@ export default function HotelMode() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.existing_menu.trim()) { setError('Please enter your menu items.'); return }
+    if (!form.existing_menu.trim()) { setError('Please enter your daily menu items.'); return }
     setLoading(true)
     setError(null)
     setResult(null)
@@ -44,7 +44,7 @@ export default function HotelMode() {
       const data = await optimizeHotel(form)
       setResult(data)
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Network failure. Ensure Aduppu engine is running.')
+      setError(err instanceof Error ? err.message : 'Network connection failed. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -53,44 +53,39 @@ export default function HotelMode() {
   return (
     <div className="space-y-8">
       
-      {/* Policy Banner */}
-      <div className="flex items-start gap-4 p-5 rounded-2xl bg-indigo-500/10 border border-indigo-500/20">
-        <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 mt-0.5 shrink-0">
-          <BookOpen size={20} />
-        </div>
+      {/* Informational Banner */}
+      <div className="flex items-start gap-3 p-4 rounded-lg bg-sky-50 border border-sky-100">
+        <Info className="flex-shrink-0 text-sky-600 mt-0.5" size={20} />
         <div>
-          <h3 className="text-sm font-bold text-indigo-100 uppercase tracking-wider mb-1">State Allocation Policy Active</h3>
-          <p className="text-sm text-indigo-200/70 leading-relaxed">
-            Commercial LPG operations are strictly limited to 20% of standard baseline due to supply constraints. Aduppu AI will automatically audit and trim your menu to maintain operational longevity.
+          <h3 className="text-sm font-semibold text-sky-900 mb-1">State LPG Allocation Act</h3>
+          <p className="text-sm text-sky-800 leading-relaxed">
+            During the current shortage, commercial gas allocation is strictly capped at 20% of your standard volume. Use this tool to optimize your menu offerings and keep your restaurant operating.
           </p>
-        </div>
-        <div className="hidden sm:flex ml-auto pl-4 shrink-0">
-          <span className="status-badge brand">20% Quota Enforced</span>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6 flex flex-col">
         
         {/* Unit Data */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <div className="group">
-            <label className="premium-label group-focus-within:text-indigo-400 transition-colors">
-              <Flame size={14} /> Commercial Cylinders Available
+          <div>
+            <label className="std-label flex items-center gap-2">
+              <Flame size={14} className="text-slate-400" /> Stock (Commercial Cylinders)
             </label>
             <input
               type="number" min={0.5} max={50} step={0.5}
-              className="premium-input"
+              className="std-input"
               value={form.commercial_cylinders_left}
               onChange={e => setForm(p => ({ ...p, commercial_cylinders_left: parseFloat(e.target.value) || 1 }))}
             />
           </div>
-          <div className="group">
-            <label className="premium-label group-focus-within:text-indigo-400 transition-colors">
-              <Users size={14} /> Estimated Daily Footfall
+          <div>
+            <label className="std-label flex items-center gap-2">
+              <Users size={14} className="text-slate-400" /> Expected Daily Customers
             </label>
             <input
               type="number" min={10} max={2000} step={10}
-              className="premium-input"
+              className="std-input"
               value={form.estimated_daily_footfall}
               onChange={e => setForm(p => ({ ...p, estimated_daily_footfall: parseInt(e.target.value) || 50 }))}
             />
@@ -98,13 +93,13 @@ export default function HotelMode() {
         </div>
 
         {/* Existing Menu */}
-        <div className="group">
-          <label className="premium-label group-focus-within:text-indigo-400 transition-colors">
-            <BookOpen size={14} /> Current Menu Matrix (CSV Format)
+        <div>
+          <label className="std-label flex items-center gap-2">
+            <BookOpen size={14} className="text-slate-400" /> Current Menu Offerings (comma-separated)
           </label>
           <textarea
             rows={3}
-            className="premium-input resize-y min-h-[100px]"
+            className="std-input resize-y min-h-[100px]"
             value={form.existing_menu}
             onChange={e => setForm(p => ({ ...p, existing_menu: e.target.value }))}
           />
@@ -112,8 +107,8 @@ export default function HotelMode() {
 
         {/* Commercial Grid */}
         <div>
-          <label className="premium-label mb-3">
-            <Zap size={14} /> Electric Institutional Equipment
+          <label className="std-label mb-3 flex items-center gap-2">
+            <Zap size={14} className="text-slate-400" /> Electric Kitchen Equipment Available
           </label>
           <div className="appliance-grid">
             {HOTEL_EQUIPMENT.map(eq => (
@@ -122,106 +117,109 @@ export default function HotelMode() {
                   type="checkbox"
                   checked={form.electric_commercial_equipment.includes(eq)}
                   onChange={() => toggleEquip(eq)}
-                  className="accent-indigo-500"
                 />
-                <span className="text-sm font-medium text-slate-300">{eq}</span>
+                <span className="text-sm font-medium text-slate-700">{eq}</span>
               </label>
             ))}
           </div>
         </div>
 
         {error && (
-          <div className="flex items-center gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-200 text-sm">
-            <AlertCircle size={18} className="text-red-400" />
+          <div className="flex items-center gap-3 p-4 rounded-md bg-red-50 border border-red-200 text-red-700 text-sm">
+            <AlertCircle size={18} className="text-red-500" />
             <p>{error}</p>
           </div>
         )}
 
-        <button type="submit" disabled={loading} className="btn-primary w-full py-4 text-base mt-4">
-          {loading ? (
-            <><span className="spinner" /> Analyzing Matrix...</>
-          ) : (
-            <><ChefHat size={18} /> Run Menu Pruning Protocol</>
-          )}
-        </button>
+        <div className="pt-2 border-t border-slate-200">
+          <button type="submit" disabled={loading} className="btn-primary w-full py-3 text-base">
+            {loading ? (
+              <><span className="spinner" /> Analyzing Menu...</>
+            ) : (
+              <><ChefHat size={18} /> Generate Optimized Menu</>
+            )}
+          </button>
+        </div>
       </form>
 
       {/* Analytics Output */}
       {result && (
-        <div className="space-y-6 animate-fade-in mt-10">
+        <div className="space-y-6 animate-fade-in mt-8 pt-8 border-t border-slate-200">
+          
+          <h2 className="text-lg font-bold text-slate-800">Menu Analysis Results</h2>
           
           {/* Key Result Metrics */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div className="metric-card">
-              <div className="text-sm text-slate-500 font-medium mb-1">Operational Longevity</div>
-              <div className="text-3xl font-bold text-indigo-400">{result.estimated_days_quota_lasts.toFixed(1)} <span className="text-lg text-indigo-400/50">days</span></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="metric-box bg-slate-50">
+              <div className="text-sm text-slate-500 font-medium mb-1">Estimated Operating Days</div>
+              <div className="text-3xl font-bold text-slate-800">{result.estimated_days_quota_lasts.toFixed(1)} <span className="text-base font-normal text-slate-500">days</span></div>
             </div>
-            <div className="metric-card">
-              <div className="text-sm text-slate-500 font-medium mb-1">Approved Line Items</div>
-              <div className="text-3xl font-bold text-emerald-400">{result.approved_menu.length} <span className="text-lg text-emerald-400/50">items</span></div>
+            <div className="metric-box bg-green-50 border-green-200">
+              <div className="text-sm text-green-700 font-medium mb-1">Menu Items Approved</div>
+              <div className="text-3xl font-bold text-green-700">{result.approved_menu.length} <span className="text-base font-normal text-green-600/70">items</span></div>
             </div>
-            <div className="metric-card col-span-2 md:col-span-1">
-              <div className="text-sm text-slate-500 font-medium mb-1">Suspended Line Items</div>
-              <div className="text-3xl font-bold text-red-400">{result.disabled_menu.length} <span className="text-lg text-red-400/50">items</span></div>
+            <div className="metric-box bg-red-50 border-red-200 sm:col-span-2 lg:col-span-1">
+              <div className="text-sm text-red-700 font-medium mb-1">Items Suspended</div>
+              <div className="text-3xl font-bold text-red-700">{result.disabled_menu.length} <span className="text-base font-normal text-red-600/70">items</span></div>
             </div>
           </div>
 
-          <div className="result-panel bg-slate-800/20 border-slate-700/50">
-            <div className="flex items-center gap-2 mb-4">
-              <AlertCircle size={18} className="text-amber-400" />
-              <h3 className="text-base font-bold text-slate-200">System Warning</h3>
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-5">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertCircle size={18} className="text-amber-600" />
+              <h3 className="text-base font-bold text-amber-900">Important Notice</h3>
             </div>
-            <p className="text-slate-300 text-[15px] leading-relaxed font-medium">{result.status_warning}</p>
+            <p className="text-amber-800 text-[14px] leading-relaxed">{result.status_warning}</p>
           </div>
 
           {/* Menu Split */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             
             {/* Approved */}
-            <div className="glass-card p-6">
-              <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800/60">
-                <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-wider">Approved Matrix</h3>
-                <CheckCircle2 size={18} className="text-emerald-500/50" />
+            <div className="standard-card">
+              <div className="bg-slate-50 px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+                <h3 className="font-semibold text-slate-800">Approved Menu</h3>
+                <CheckCircle2 size={18} className="text-green-500" />
               </div>
-              <ul className="space-y-3">
+              <ul className="divide-y divide-slate-100 px-5 py-2">
                 {result.approved_menu.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
-                    <CheckCircle2 size={16} className="text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-sm text-emerald-100/90 leading-tight">{item}</span>
+                  <li key={i} className="flex items-center py-3 text-sm text-slate-700">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-3 shrink-0"></span>
+                    {item}
                   </li>
                 ))}
               </ul>
             </div>
 
             {/* Suspended */}
-            <div className="glass-card p-6">
-              <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800/60">
-                <h3 className="text-sm font-bold text-red-400 uppercase tracking-wider">Suspended Matrix</h3>
-                <XCircle size={18} className="text-red-500/50" />
+            <div className="standard-card">
+              <div className="bg-slate-50 px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+                <h3 className="font-semibold text-slate-800">Suspended Items</h3>
+                <XCircle size={18} className="text-red-500" />
               </div>
-              <ul className="space-y-3">
+              <ul className="divide-y divide-slate-100 px-5 py-2">
                 {result.disabled_menu.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 p-3 rounded-xl bg-red-500/5 border border-red-500/10">
-                    <XCircle size={16} className="text-red-500 shrink-0 mt-0.5" />
-                    <span className="text-sm text-red-100/90 leading-tight">{item}</span>
+                  <li key={i} className="flex items-center py-3 text-sm text-slate-500 line-through">
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-300 mr-3 shrink-0"></span>
+                    {item}
                   </li>
                 ))}
               </ul>
             </div>
           </div>
 
-          <div className="glass-card p-6 md:p-8 border-indigo-500/10">
-            <div className="flex items-center gap-2 mb-6">
-              <ChefHat size={18} className="text-indigo-400" />
-              <h3 className="text-base font-bold text-indigo-200">Aduppu AI Kitchen Protocol</h3>
+          <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
+            <div className="bg-slate-50 border-b border-slate-200 px-5 py-3 flex items-center gap-2">
+              <ChefHat size={16} className="text-sky-600" />
+              <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wide">Kitchen Preparation Guide</h3>
             </div>
-            <div className="space-y-6">
+            <div className="p-0">
               {result.kitchen_instructions.map((step, i) => (
-                <div key={i} className="flex gap-4 items-start">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400 border border-slate-700">
+                <div key={i} className="flex gap-4 items-start p-4 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">
                     {i + 1}
                   </div>
-                  <p className="text-[15px] text-slate-300 leading-relaxed pt-1">{step}</p>
+                  <p className="text-[15px] text-slate-700 leading-relaxed">{step}</p>
                 </div>
               ))}
             </div>
