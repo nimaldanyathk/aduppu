@@ -1,91 +1,74 @@
-# OptiFlame AI 🔥
+# Aduppu അടുപ്പ്
 
-**Emergency LPG Conservation Tool — March 2026 Hormuz Crisis**
+![Aduppu Banner](https://img.shields.io/badge/Aduppu-Intelligent_LPG_Management-0284c7?style=for-the-badge)
 
-A full-stack web application helping Indian households and restaurants survive the March 2026 LPG gas shortage caused by the blockade of the Strait of Hormuz.
-
-## Project Structure
-
-```
-lpg_won/
-├── backend/           # FastAPI (Python) + Google Gemini AI
-│   ├── main.py
-│   ├── requirements.txt
-│   └── .env.example
-└── frontend/          # Next.js 14 + Tailwind CSS + Lucide Icons
-    ├── app/
-    │   ├── layout.tsx
-    │   ├── page.tsx
-    │   └── globals.css
-    ├── components/
-    │   ├── HouseholdMode.tsx
-    │   └── HotelMode.tsx
-    └── lib/
-        └── api.ts
-```
-
-## Quick Start
-
-### 1. Backend Setup
-
-```bash
-cd backend
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-
-# Configure Gemini API key
-cp .env.example .env
-# Edit .env and set your GEMINI_API_KEY
-
-# Start the server
-uvicorn main:app --reload --port 8000
-```
-
-### 2. Frontend Setup
-
-```bash
-cd frontend
-npm install
-npm run dev
-# Opens at http://localhost:3000
-```
+Aduppu (അടുപ്പ്) is a premium LPG conservation and management platform designed to optimize household and commercial gas usage efficiently. Built in response to the March 2026 LPG shortages, it provides AI-driven step-by-step cooking plans and institutional quota management to maximize the lifespan of your LPG cylinders.
 
 ## Features
 
-### 🏠 Household Mode
-- Calculates if your gas will last through the government lockout period (25 days urban / 45 days rural)
-- Routes ALL possible tasks to electric appliances, reserving gas for critical 2-minute bursts
-- Provides a dish-specific survival recipe powered by Gemini AI
+- **Household Dashboard**: Tracks daily gas usage, calculates estimated supply remaining based on family size, and provides intelligent cooking strategies (utilizing electric appliance offloading) to stretch cylinder limits.
+- **Restaurant Manager**: Audits commercial menus against the strict 20% state LPG allocation policy. Automatically disables high-thermal items to keep the kitchen operational under severe quotas.
+- **AI-Powered Plans**: Powered by Google Gemini 2.0, interpreting complex parameters instantly to output structured, actionable preparation guides.
+- **Standard Modern UI**: Built with Next.js and Tailwind CSS, featuring a clean, accessible, light-mode utility aesthetic.
 
-### 🏨 Hotel Mode
-- Operates within the government's 20% commercial LPG allocation
-- AI prunes your menu: suspending gas-heavy dishes, approving quick-cook or cold-prep items
-- Provides batch-cooking schedules and kitchen crisis protocols
+## Tech Stack
 
-## API Endpoints
+- **Frontend**: Next.js 14, React, Tailwind CSS, Lucide Icons
+- **Backend**: FastAPI, Python 3
+- **AI Core**: Google Generative AI (Gemini 2.0 Flash)
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/api/optimize-home` | Household LPG survival plan |
-| POST | `/api/optimize-hotel` | Restaurant menu pruning |
-| GET | `/health` | Health check |
+## Getting Started
 
-## Environment Variables
+### Prerequisites
 
-### Backend (`backend/.env`)
-```
-GEMINI_API_KEY=your_key_here
-```
+- Node.js (v18+)
+- Python (v3.10+)
+- Google Gemini API Key
 
-### Frontend (`frontend/.env.local`)
-```
-NEXT_PUBLIC_API_URL=http://localhost:8000
-```
+### Backend Setup
 
-## Crisis Context — March 2026
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+2. Create and activate a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Set up your environment variables. Copy the example file:
+   ```bash
+   cp .env.example .env
+   ```
+   **Open the new `.env` file and insert your Gemini API Key:**
+   ```env
+   GEMINI_API_KEY=your_actual_api_key_here
+   ```
+5. Start the FastAPI server:
+   ```bash
+   uvicorn main:app --reload --port 8000
+   ```
 
-- **Strait of Hormuz blocked** by US-Israel-Iran conflict
-- **Domestic LPG**: 25-day booking lockout (urban), 45-day (rural)
-- **Commercial LPG**: Rationed to 20% of normal allocation
-- **Location defaulted to**: Coimbatore, Tamil Nadu, India
+### Frontend Setup
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+4. The application will be available at `http://localhost:3000`.
+
+## License
+
+This project is proprietary and confidential. © 2026 Aduppu.
