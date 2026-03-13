@@ -1,30 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Flame, AlertTriangle, MapPin, Radio, ShieldAlert } from 'lucide-react'
+import { Flame, MapPin, ShieldCheck, Cpu } from 'lucide-react'
 import HouseholdMode from '@/components/HouseholdMode'
 import HotelMode from '@/components/HotelMode'
 
-const CRISIS_UPDATES = [
-  '🔴 LIVE: Strait of Hormuz blockade enters Day 12 — Indian LPG imports at 8% of normal capacity',
-  '⚠️ COIMBATORE: Next cylinder booking window opens in 18 days for urban households',
-  '🏨 COMMERCIAL ALERT: Hotels violating 20% quota face immediate supply suspension',
-  '📦 SCARCITY: Panic buying spikes in Tamil Nadu — 3 cylinders/household reported hoarded',
-  '🚢 UPDATE: No relief tankers expected for the next 30 days per PPAC statement',
-  '🇮🇳 GOVT ORDER: New cylinder bookings frozen — lockout strictly enforced from March 10',
-]
-
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'household' | 'hotel'>('household')
-  const [tickerIndex, setTickerIndex] = useState(0)
   const [currentTime, setCurrentTime] = useState<string>('')
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTickerIndex(i => (i + 1) % CRISIS_UPDATES.length)
-    }, 6000)
-    return () => clearInterval(interval)
-  }, [])
 
   useEffect(() => {
     const updateTime = () => {
@@ -45,144 +28,107 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--bg-dark)' }}>
-
-      {/* Crisis Ticker Banner */}
-      <div className="crisis-ticker py-2 px-4 flex items-center gap-3 overflow-hidden">
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <Radio size={14} className="text-red-300 animate-pulse" />
-          <span className="text-xs font-bold text-red-200 uppercase tracking-widest whitespace-nowrap">CRISIS ALERT</span>
-        </div>
-        <div className="h-4 w-px bg-red-800" />
-        <p className="text-xs text-red-100 truncate transition-all duration-500">
-          {CRISIS_UPDATES[tickerIndex]}
-        </p>
+    <main className="min-h-screen relative overflow-hidden bg-slate-950 text-slate-50">
+      
+      {/* Premium Background Orbs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-10%] left-1/4 w-[500px] h-[500px] rounded-full opacity-[0.03] blur-[100px] bg-indigo-500" />
+        <div className="absolute bottom-1/4 right-0 w-[600px] h-[600px] rounded-full opacity-[0.02] blur-[120px] bg-emerald-500" />
       </div>
 
-      {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        {/* Background gradient orbs */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-10 blur-3xl"
-            style={{ background: 'radial-gradient(circle, #f97316, transparent)' }} />
-          <div className="absolute top-0 right-1/4 w-64 h-64 rounded-full opacity-8 blur-3xl"
-            style={{ background: 'radial-gradient(circle, #ef4444, transparent)' }} />
-        </div>
-
-        <div className="relative max-w-5xl mx-auto px-4 pt-12 pb-8 text-center">
-          {/* Logo + Title */}
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="relative">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                style={{ background: 'linear-gradient(135deg, #ea580c, #f97316)', boxShadow: '0 0 30px rgba(249,115,22,0.4)' }}>
-                <span className="flame-icon text-3xl">🔥</span>
+      <div className="relative max-w-5xl mx-auto px-6 pt-16 pb-20">
+        
+        {/* Header / Hero Section */}
+        <div className="text-center mb-16 animate-slide-up">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <div className="relative group">
+              <div className="absolute inset-0 bg-indigo-500 rounded-2xl blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
+              <div className="relative w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-xl">
+                <Flame size={32} className="text-indigo-400" />
               </div>
-            </div>
-            <div className="text-left">
-              <h1 className="text-3xl sm:text-4xl font-black tracking-tight" style={{ background: 'linear-gradient(90deg, #f97316, #fbbf24)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                OptiFlame AI
-              </h1>
-              <p className="text-xs text-gray-500 font-medium tracking-widest uppercase">Emergency LPG Optimizer</p>
             </div>
           </div>
 
-          {/* Location + Time */}
-          <div className="flex items-center justify-center gap-4 mb-5 flex-wrap">
-            <div className="flex items-center gap-1.5 text-sm text-gray-400">
-              <MapPin size={14} className="text-orange-500" />
-              <span>Coimbatore, Tamil Nadu</span>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-4">
+            Aduppu <span className="font-medium text-slate-400 tracking-normal ml-2 text-3xl sm:text-4xl md:text-5xl">അടുപ്പ്</span>
+          </h1>
+          
+          <p className="text-lg text-slate-400 max-w-2xl mx-auto mb-8 font-medium">
+            Intelligent LPG Management Protocol. Maximize efficiency, minimize waste, and secure your energy reserves with AI-driven precision.
+          </p>
+
+          <div className="flex items-center justify-center gap-6 text-sm font-medium text-slate-500 flex-wrap">
+            <div className="flex items-center gap-2">
+              <MapPin size={16} className="text-indigo-400" />
+              <span>Coimbatore Base</span>
             </div>
-            <div className="h-4 w-px bg-gray-700 hidden sm:block" />
-            <div className="flex items-center gap-1.5 text-sm text-gray-400">
-              <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-              <span>March 2026 Crisis Active</span>
+            <div className="w-1 h-1 rounded-full bg-slate-700 hidden sm:block" />
+            <div className="flex items-center gap-2">
+              <ShieldCheck size={16} className="text-emerald-400" />
+              <span>Conservation Active</span>
             </div>
             {currentTime && (
               <>
-                <div className="h-4 w-px bg-gray-700 hidden sm:block" />
-                <span className="text-sm text-gray-500">{currentTime}</span>
+                <div className="w-1 h-1 rounded-full bg-slate-700 hidden sm:block" />
+                <span>{currentTime}</span>
               </>
             )}
           </div>
+        </div>
 
-          {/* Crisis Summary Card */}
-          <div className="max-w-2xl mx-auto glass-card p-5 mb-8" style={{ borderColor: 'rgba(239,68,68,0.2)', background: 'rgba(239,68,68,0.04)' }}>
-            <div className="flex items-start gap-3">
-              <ShieldAlert size={20} className="text-red-400 flex-shrink-0 mt-0.5" />
-              <div className="text-left">
-                <p className="text-sm font-bold text-red-300 mb-1">Situation — March 2026</p>
-                <p className="text-xs text-gray-400 leading-relaxed">
-                  The Strait of Hormuz is blocked due to the US-Israel-Iran conflict. India&apos;s LPG imports have dropped to critical levels.
-                  <span className="text-amber-400"> Domestic households face a 25–45 day refill lockout.</span>
-                  <span className="text-red-400"> Commercial establishments are restricted to 20% of normal LPG allocation.</span>
-                  {' '}OptiFlame AI helps you survive this crisis with precise gas conservation.
-                </p>
-              </div>
+        {/* Segmented Control Tabs */}
+        <div className="flex justify-center mb-10 animate-fade-in" style={{ animationDelay: '150ms' }}>
+          <div className="segmented-control glass-card p-1">
+            <button
+              className={`segment-btn ${activeTab === 'household' ? 'active' : ''}`}
+              onClick={() => setActiveTab('household')}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              Domestic Core
+            </button>
+            <button
+              className={`segment-btn ${activeTab === 'hotel' ? 'active' : ''}`}
+              onClick={() => setActiveTab('hotel')}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
+              Commercial Hub
+            </button>
+          </div>
+        </div>
+
+        {/* Content Area */}
+        <div className="glass-card p-6 md:p-8 animate-slide-up" style={{ animationDelay: '300ms', borderColor: 'rgba(99, 102, 241, 0.15)' }}>
+          {/* Header context for the specific mode */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-8 border-b border-slate-800/60">
+            <div>
+              <h2 className="text-xl font-bold text-slate-100 flex items-center gap-2 mb-2">
+                {activeTab === 'household' ? 'Domestic Optimization Engine' : 'Commercial Quota Manager'}
+              </h2>
+              <p className="text-sm text-slate-400 max-w-xl leading-relaxed">
+                {activeTab === 'household' 
+                  ? 'Calculate reserve longevity and offload thermal load to electric appliances to stretch your cylinder limits during supply shortages.'
+                  : 'Operate cleanly within the 20% institutional allocation. Aduppu AI instantly trims your menu matrix to ensure continuous service.'}
+              </p>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold whitespace-nowrap self-start md:self-center">
+              <Cpu size={14} />
+              Gemini 2.0 AI Core
             </div>
           </div>
 
-          {/* Mode Tabs */}
-          <div className="inline-flex items-center gap-2 p-1.5 rounded-xl" style={{ background: 'rgba(14,14,26,0.8)', border: '1px solid #1f1f2e' }}>
-            <button
-              className={`tab-btn ${activeTab === 'household' ? 'active' : ''}`}
-              onClick={() => setActiveTab('household')}
-            >
-              🏠 Household Mode
-            </button>
-            <button
-              className={`tab-btn ${activeTab === 'hotel' ? 'active' : ''}`}
-              onClick={() => setActiveTab('hotel')}
-            >
-              🏨 Hotel Mode
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-5xl mx-auto px-4 pb-16">
-        {/* Mode description */}
-        <div className="glass-card p-4 mb-6 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-            style={{ background: 'rgba(249,115,22,0.15)', border: '1px solid rgba(249,115,22,0.2)' }}>
-            {activeTab === 'household' ? '🏠' : '🏨'}
-          </div>
-          <div>
-            {activeTab === 'household' ? (
-              <>
-                <p className="text-sm font-semibold text-white">Household Survival Optimizer</p>
-                <p className="text-xs text-gray-500">
-                  Calculate exactly how long your gas will last and get a step-by-step plan that routes every possible task to electric appliances — preserving gas only for critical 2-minute bursts.
-                </p>
-              </>
-            ) : (
-              <>
-                <p className="text-sm font-semibold text-white">Commercial Kitchen Crisis Manager</p>
-                <p className="text-xs text-gray-500">
-                  Operating under the government&apos;s 20% commercial allocation? Let OptiFlame AI prune your menu, identify gas-heavy dishes to suspend, and restructure your kitchen workflow for maximum survival.
-                </p>
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Mode Panel */}
-        <div className="glass-card p-6">
+          {/* Render Mode Component */}
           {activeTab === 'household' ? <HouseholdMode /> : <HotelMode />}
         </div>
 
         {/* Footer */}
-        <div className="mt-8 text-center">
-          <p className="text-xs text-gray-600">
-            OptiFlame AI · Emergency LPG Conservation Tool · March 2026 ·
-            <span className="text-orange-800"> Powered by Google Gemini</span>
+        <div className="mt-16 pt-8 border-t border-slate-800/50 flex flex-col items-center">
+          <p className="text-sm text-slate-500 font-medium tracking-wide">
+            Aduppu <span className="font-normal mx-1">അടുപ്പ്</span> © 2026
           </p>
-          <div className="flex items-center justify-center gap-2 mt-2">
-            <AlertTriangle size={12} className="text-amber-800" />
-            <p className="text-xs text-gray-700">
-              AI estimates are advisory. Always follow official government guidelines for LPG usage.
-            </p>
-          </div>
+          <p className="text-xs text-slate-600 mt-2">
+            Intelligent Energy Systems · Powered by Google Gemini
+          </p>
         </div>
       </div>
     </main>

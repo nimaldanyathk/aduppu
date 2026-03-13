@@ -2,8 +2,7 @@
 
 import { useState } from 'react'
 import {
-  AlertTriangle, Flame, Building2, Users, Zap,
-  CheckCircle, XCircle, BookOpen, ChefHat
+  AlertCircle, Flame, Users, Zap, BookOpen, ChefHat, CheckCircle2, XCircle
 } from 'lucide-react'
 import { optimizeHotel, HotelOptimizeResponse, HotelOptimizeRequest } from '@/lib/api'
 
@@ -37,7 +36,7 @@ export default function HotelMode() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.existing_menu.trim()) { setError('Please enter your current menu items.'); return }
+    if (!form.existing_menu.trim()) { setError('Please enter your menu items.'); return }
     setLoading(true)
     setError(null)
     setResult(null)
@@ -45,72 +44,76 @@ export default function HotelMode() {
       const data = await optimizeHotel(form)
       setResult(data)
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to connect. Is the backend running?')
+      setError(err instanceof Error ? err.message : 'Network failure. Ensure Aduppu engine is running.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="space-y-6">
-      {/* 20% quota warning banner */}
-      <div className="flex items-center gap-3 p-4 rounded-xl" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)' }}>
-        <AlertTriangle size={18} className="text-red-400 flex-shrink-0" />
-        <div>
-          <p className="text-sm font-bold text-red-300">Government 20% Allocation Active</p>
-          <p className="text-xs text-gray-400 mt-0.5">Commercial LPG is rationed to 20% of normal supply. Violations may result in your establishment&apos;s connection being suspended.</p>
+    <div className="space-y-8">
+      
+      {/* Policy Banner */}
+      <div className="flex items-start gap-4 p-5 rounded-2xl bg-indigo-500/10 border border-indigo-500/20">
+        <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 mt-0.5 shrink-0">
+          <BookOpen size={20} />
         </div>
-        <span className="badge-critical ml-auto whitespace-nowrap">20% Quota</span>
+        <div>
+          <h3 className="text-sm font-bold text-indigo-100 uppercase tracking-wider mb-1">State Allocation Policy Active</h3>
+          <p className="text-sm text-indigo-200/70 leading-relaxed">
+            Commercial LPG operations are strictly limited to 20% of standard baseline due to supply constraints. Aduppu AI will automatically audit and trim your menu to maintain operational longevity.
+          </p>
+        </div>
+        <div className="hidden sm:flex ml-auto pl-4 shrink-0">
+          <span className="status-badge brand">20% Quota Enforced</span>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Row 1 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="crisis-label flex items-center gap-1">
-              <Flame size={11} className="text-orange-500" /> Commercial Cylinders Left
+      <form onSubmit={handleSubmit} className="space-y-6">
+        
+        {/* Unit Data */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="group">
+            <label className="premium-label group-focus-within:text-indigo-400 transition-colors">
+              <Flame size={14} /> Commercial Cylinders Available
             </label>
             <input
               type="number" min={0.5} max={50} step={0.5}
-              className="crisis-input"
+              className="premium-input"
               value={form.commercial_cylinders_left}
               onChange={e => setForm(p => ({ ...p, commercial_cylinders_left: parseFloat(e.target.value) || 1 }))}
             />
-            <p className="text-xs text-gray-600 mt-1">19kg commercial cylinders</p>
           </div>
-          <div>
-            <label className="crisis-label flex items-center gap-1">
-              <Users size={11} className="text-orange-500" /> Estimated Daily Footfall
+          <div className="group">
+            <label className="premium-label group-focus-within:text-indigo-400 transition-colors">
+              <Users size={14} /> Estimated Daily Footfall
             </label>
             <input
               type="number" min={10} max={2000} step={10}
-              className="crisis-input"
+              className="premium-input"
               value={form.estimated_daily_footfall}
               onChange={e => setForm(p => ({ ...p, estimated_daily_footfall: parseInt(e.target.value) || 50 }))}
             />
-            <p className="text-xs text-gray-600 mt-1">Covers per day (realistic, not peak)</p>
           </div>
         </div>
 
-        {/* Menu items */}
-        <div>
-          <label className="crisis-label flex items-center gap-1">
-            <BookOpen size={11} className="text-orange-500" /> Current Menu (Comma-separated)
+        {/* Existing Menu */}
+        <div className="group">
+          <label className="premium-label group-focus-within:text-indigo-400 transition-colors">
+            <BookOpen size={14} /> Current Menu Matrix (CSV Format)
           </label>
           <textarea
-            rows={4}
-            className="crisis-input resize-none"
-            placeholder="e.g. Veg Biryani, Chicken Curry, Dal Makhani, Curd Rice..."
+            rows={3}
+            className="premium-input resize-y min-h-[100px]"
             value={form.existing_menu}
             onChange={e => setForm(p => ({ ...p, existing_menu: e.target.value }))}
           />
-          <p className="text-xs text-gray-600 mt-1">Include every item currently on your menu</p>
         </div>
 
-        {/* Electric equipment */}
+        {/* Commercial Grid */}
         <div>
-          <label className="crisis-label flex items-center gap-1">
-            <Zap size={11} className="text-orange-500" /> Available Electric Commercial Equipment
+          <label className="premium-label mb-3">
+            <Zap size={14} /> Electric Institutional Equipment
           </label>
           <div className="appliance-grid">
             {HOTEL_EQUIPMENT.map(eq => (
@@ -119,108 +122,111 @@ export default function HotelMode() {
                   type="checkbox"
                   checked={form.electric_commercial_equipment.includes(eq)}
                   onChange={() => toggleEquip(eq)}
-                  className="w-4 h-4 flex-shrink-0"
+                  className="accent-indigo-500"
                 />
-                <span className="text-sm text-gray-300">{eq}</span>
+                <span className="text-sm font-medium text-slate-300">{eq}</span>
               </label>
             ))}
           </div>
         </div>
 
         {error && (
-          <div className="flex items-start gap-3 p-4 rounded-xl" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)' }}>
-            <AlertTriangle size={18} className="text-red-400 flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-red-300">{error}</p>
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-200 text-sm">
+            <AlertCircle size={18} className="text-red-400" />
+            <p>{error}</p>
           </div>
         )}
 
-        <button type="submit" disabled={loading} className="btn-ember w-full flex items-center justify-center gap-3 text-base py-3.5">
+        <button type="submit" disabled={loading} className="btn-primary w-full py-4 text-base mt-4">
           {loading ? (
-            <><span className="spinner" /> Analyzing with OptiFlame AI...</>
+            <><span className="spinner" /> Analyzing Matrix...</>
           ) : (
-            <><ChefHat size={18} /> Prune Menu for 20% Quota</>
+            <><ChefHat size={18} /> Run Menu Pruning Protocol</>
           )}
         </button>
       </form>
 
-      {/* Results */}
+      {/* Analytics Output */}
       {result && (
-        <div className="space-y-4 animate-fade-in">
-          {/* Days quota metric */}
-          <div className="grid grid-cols-3 gap-3">
+        <div className="space-y-6 animate-fade-in mt-10">
+          
+          {/* Key Result Metrics */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div className="metric-card">
-              <div className="text-2xl font-bold text-orange-400">{result.estimated_days_quota_lasts.toFixed(1)}</div>
-              <div className="text-xs text-gray-500 mt-1">Days Quota Lasts</div>
+              <div className="text-sm text-slate-500 font-medium mb-1">Operational Longevity</div>
+              <div className="text-3xl font-bold text-indigo-400">{result.estimated_days_quota_lasts.toFixed(1)} <span className="text-lg text-indigo-400/50">days</span></div>
             </div>
             <div className="metric-card">
-              <div className="text-2xl font-bold text-emerald-400">{result.approved_menu.length}</div>
-              <div className="text-xs text-gray-500 mt-1">Approved Items</div>
+              <div className="text-sm text-slate-500 font-medium mb-1">Approved Line Items</div>
+              <div className="text-3xl font-bold text-emerald-400">{result.approved_menu.length} <span className="text-lg text-emerald-400/50">items</span></div>
             </div>
-            <div className="metric-card">
-              <div className="text-2xl font-bold text-red-400">{result.disabled_menu.length}</div>
-              <div className="text-xs text-gray-500 mt-1">Suspended Items</div>
+            <div className="metric-card col-span-2 md:col-span-1">
+              <div className="text-sm text-slate-500 font-medium mb-1">Suspended Line Items</div>
+              <div className="text-3xl font-bold text-red-400">{result.disabled_menu.length} <span className="text-lg text-red-400/50">items</span></div>
             </div>
           </div>
 
-          {/* Status Warning */}
-          <div className="result-panel" style={{ background: 'linear-gradient(135deg, rgba(239,68,68,0.07), rgba(14,14,26,0.9))', borderColor: 'rgba(239,68,68,0.25)' }}>
-            <div className="flex items-center gap-2 mb-3">
-              <AlertTriangle size={16} className="text-red-400" />
-              <h3 className="text-sm font-bold text-red-300 uppercase tracking-wider">Status Warning</h3>
-            </div>
-            <p className="text-gray-200 text-sm leading-relaxed">{result.status_warning}</p>
-          </div>
-
-          {/* Approved & Disabled menu side by side */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Approved */}
-            <div className="glass-card p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <CheckCircle size={16} className="text-emerald-400" />
-                <h3 className="text-sm font-bold text-emerald-300 uppercase tracking-wider">Approved Menu</h3>
-              </div>
-              <div>
-                {result.approved_menu.map((item, i) => (
-                  <div key={i} className="menu-approved">
-                    <CheckCircle size={14} className="text-emerald-400 flex-shrink-0 mt-0.5" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Disabled */}
-            <div className="glass-card p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <XCircle size={16} className="text-red-400" />
-                <h3 className="text-sm font-bold text-red-300 uppercase tracking-wider">Suspended Menu</h3>
-              </div>
-              <div>
-                {result.disabled_menu.map((item, i) => (
-                  <div key={i} className="menu-disabled">
-                    <XCircle size={14} className="text-red-400 flex-shrink-0 mt-0.5" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Kitchen Instructions */}
-          <div className="glass-card p-5">
+          <div className="result-panel bg-slate-800/20 border-slate-700/50">
             <div className="flex items-center gap-2 mb-4">
-              <ChefHat size={16} className="text-orange-400" />
-              <h3 className="text-sm font-bold text-orange-300 uppercase tracking-wider">Crisis Kitchen Protocol</h3>
+              <AlertCircle size={18} className="text-amber-400" />
+              <h3 className="text-base font-bold text-slate-200">System Warning</h3>
             </div>
-            <div className="space-y-0">
+            <p className="text-slate-300 text-[15px] leading-relaxed font-medium">{result.status_warning}</p>
+          </div>
+
+          {/* Menu Split */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            {/* Approved */}
+            <div className="glass-card p-6">
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800/60">
+                <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-wider">Approved Matrix</h3>
+                <CheckCircle2 size={18} className="text-emerald-500/50" />
+              </div>
+              <ul className="space-y-3">
+                {result.approved_menu.map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
+                    <CheckCircle2 size={16} className="text-emerald-500 shrink-0 mt-0.5" />
+                    <span className="text-sm text-emerald-100/90 leading-tight">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Suspended */}
+            <div className="glass-card p-6">
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800/60">
+                <h3 className="text-sm font-bold text-red-400 uppercase tracking-wider">Suspended Matrix</h3>
+                <XCircle size={18} className="text-red-500/50" />
+              </div>
+              <ul className="space-y-3">
+                {result.disabled_menu.map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 p-3 rounded-xl bg-red-500/5 border border-red-500/10">
+                    <XCircle size={16} className="text-red-500 shrink-0 mt-0.5" />
+                    <span className="text-sm text-red-100/90 leading-tight">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="glass-card p-6 md:p-8 border-indigo-500/10">
+            <div className="flex items-center gap-2 mb-6">
+              <ChefHat size={18} className="text-indigo-400" />
+              <h3 className="text-base font-bold text-indigo-200">Aduppu AI Kitchen Protocol</h3>
+            </div>
+            <div className="space-y-6">
               {result.kitchen_instructions.map((step, i) => (
-                <div key={i} className="step-item">
-                  <div className="step-number">{i + 1}</div>
-                  <p className="text-sm text-gray-300 leading-relaxed">{step}</p>
+                <div key={i} className="flex gap-4 items-start">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400 border border-slate-700">
+                    {i + 1}
+                  </div>
+                  <p className="text-[15px] text-slate-300 leading-relaxed pt-1">{step}</p>
                 </div>
               ))}
             </div>
           </div>
+
         </div>
       )}
     </div>

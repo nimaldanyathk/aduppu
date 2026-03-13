@@ -2,10 +2,10 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'OptiFlame AI — LPG Crisis Optimizer | March 2026',
+  title: 'Aduppu അടുപ്പ് | Intelligent LPG Manager',
   description:
-    'Emergency LPG conservation tool for the March 2026 Hormuz Strait crisis. Optimize household and commercial gas usage with AI-powered guidance.',
-  keywords: 'LPG shortage, gas crisis, India 2026, Hormuz Strait, OptiFlame, LPG conservation',
+    'Aduppu (അടുപ്പ്) is a premium LPG conservation and management platform designed to optimize household and commercial gas usage efficiently.',
+  keywords: 'LPG management, Aduppu, അടുപ്പ്, gas conservation, smart kitchen, efficiency',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -15,12 +15,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Malayalam:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className="min-h-screen" style={{ background: 'var(--bg-dark)' }}>
+      <body className="min-h-screen antialiased bg-slate-950">
         {children}
       </body>
     </html>
