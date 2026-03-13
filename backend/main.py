@@ -1,6 +1,7 @@
 import os
 import json
 import re
+from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -8,14 +9,15 @@ from typing import List, Optional
 from dotenv import load_dotenv
 import google.generativeai as genai
 
-load_dotenv()
+# Always load .env from the same directory as this file, regardless of cwd
+load_dotenv(dotenv_path=Path(__file__).parent / ".env")
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     raise RuntimeError("GEMINI_API_KEY is not set in environment variables.")
-
 genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel("gemini-2.0-flash")
+model = genai.GenerativeModel("gemini-flash-latest")
+
 
 app = FastAPI(
     title="OptiFlame AI API",
